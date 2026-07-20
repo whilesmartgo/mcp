@@ -39,6 +39,24 @@ func main() {
 `AddRegistry(server, reg)` adds the same tools to a server you already built,
 for hosts that also carry tools from other sources.
 
+## Serving over HTTP
+
+`StreamableHTTPHandler` returns a stateless `http.Handler` for MCP's
+streamable-HTTP transport, so you can mount the tool set on a web server without
+importing the underlying SDK. The registry is chosen per request, which lets you
+authenticate the caller and hand back a tool set scoped to their permissions.
+
+```go
+handler := agentsmcp.StreamableHTTPHandler("my-app", "v1.0.0", func(r *http.Request) *agents.Registry {
+	actor := authenticate(r) // your auth
+	if actor == nil {
+		return nil // serves 400
+	}
+	return registryFor(actor)
+})
+http.Handle("/mcp", handler)
+```
+
 ## Authorization
 
 The bridge adds no auth of its own. A tool that returns an error yields an MCP

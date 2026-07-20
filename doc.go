@@ -12,6 +12,10 @@
 //	// serve over any MCP transport, e.g. stdio:
 //	_ = server.Run(ctx, &mcp.StdioTransport{})
 //
+// To serve over HTTP without touching the underlying SDK, use
+// StreamableHTTPHandler, which picks the registry per request so the tool set
+// can be scoped to the authenticated caller.
+//
 // The consumer supplies authorization inside each agents.Tool handler (or via
 // the Runner in the agents package); this bridge adds no auth of its own.
 package agentsmcp
